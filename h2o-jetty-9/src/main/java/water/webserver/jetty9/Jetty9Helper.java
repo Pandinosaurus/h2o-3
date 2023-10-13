@@ -31,6 +31,8 @@ import water.webserver.iface.LoginType;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.util.Collections;
 
 class Jetty9Helper {
@@ -63,7 +65,12 @@ class Jetty9Helper {
 
         final ServerConnector connector;
         if (isSecured) {
-            final SslContextFactory sslContextFactory = new SslContextFactory(config.jks);
+            final SslContextFactory sslContextFactory = new SslContextFactory.Server();
+            try {
+                sslContextFactory.setKeyStore(KeyStore.getInstance(config.jks));
+            } catch (KeyStoreException e) {
+                throw new IllegalStateException("There is a problem loading keystore:", e);
+            }
             sslContextFactory.setKeyStorePassword(config.jks_pass);
             if (config.jks_alias != null) {
                 sslContextFactory.setCertAlias(config.jks_alias);
