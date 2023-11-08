@@ -31,6 +31,7 @@ class H2OAdaBoostEstimator(H2OEstimator):
                  nlearners=50,  # type: int
                  weak_learner="auto",  # type: Literal["auto", "drf", "glm", "gbm", "deep_learning"]
                  learn_rate=0.5,  # type: float
+                 weak_learner_params=None,  # type: Optional[dict]
                  seed=-1,  # type: int
                  ):
         """
@@ -68,6 +69,9 @@ class H2OAdaBoostEstimator(H2OEstimator):
         :param learn_rate: Learning rate (from 0.0 to 1.0)
                Defaults to ``0.5``.
         :type learn_rate: float
+        :param weak_learner_params: Customized parameters for the weak_learner algorithm.
+               Defaults to ``None``.
+        :type weak_learner_params: dict, optional
         :param seed: Seed for pseudo random number generator (if applicable)
                Defaults to ``-1``.
         :type seed: int
@@ -83,6 +87,7 @@ class H2OAdaBoostEstimator(H2OEstimator):
         self.nlearners = nlearners
         self.weak_learner = weak_learner
         self.learn_rate = learn_rate
+        self.weak_learner_params = weak_learner_params
         self.seed = seed
 
     @property
@@ -202,6 +207,20 @@ class H2OAdaBoostEstimator(H2OEstimator):
     def learn_rate(self, learn_rate):
         assert_is_type(learn_rate, None, numeric)
         self._parms["learn_rate"] = learn_rate
+
+    @property
+    def weak_learner_params(self):
+        """
+        Customized parameters for the weak_learner algorithm.
+
+        Type: ``dict``.
+        """
+        return self._parms.get("weak_learner_params")
+
+    @weak_learner_params.setter
+    def weak_learner_params(self, weak_learner_params):
+        assert_is_type(weak_learner_params, None, dict)
+        self._parms["weak_learner_params"] = weak_learner_params
 
     @property
     def seed(self):

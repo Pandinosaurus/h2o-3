@@ -78,6 +78,7 @@ public class AdaBoost extends ModelBuilder<AdaBoostModel, AdaBoostModel.AdaBoost
         }
         if (useCustomWeakLearnerParameters()) {
             try {
+                System.out.println("_parms = " + _parms._weak_learner_params);
                 _gsonParser = new GsonBuilder()
                         .setFieldNamingStrategy(new PrecedingUnderscoreNamingStrategy())
                         .create();
